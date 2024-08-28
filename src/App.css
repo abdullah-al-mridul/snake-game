@@ -1,0 +1,208 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Fira Code", monospace;
+}
+body {
+  background: #011627;
+}
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: url("./images/bg.png");
+  background-position-x: calc(50% + 50px);
+  background-position-y: center;
+  background-repeat: no-repeat;
+}
+
+.wrapper {
+  height: 475px;
+  width: 510px;
+  position: relative;
+  gap: 24px;
+  backdrop-filter: blur(64px);
+  box-shadow: inset 0 2px 0 0 rgba(255, 255, 255, 0.3);
+  padding: 35px;
+  padding-left: 30px;
+  padding-right: 30px;
+  background: linear-gradient(
+    151.979deg,
+    rgba(23, 85, 83, 70%) 0%,
+    rgba(67, 217, 173, 9%) 100%
+  );
+  background-size: cover;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid #0c1616;
+  /* flex-direction: column; */
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.play-board {
+  height: 100%;
+  /* width: 100%; */
+  width: 238px;
+  display: grid;
+  border-radius: 8px;
+  background: rgba(1, 22, 39, 0.84);
+  box-shadow: inset 1px 5px 11px 0 rgba(2, 18, 27, 0.71);
+  grid-template: repeat(40, 1fr) / repeat(25, 1fr);
+  position: relative;
+}
+
+.play-board .food {
+  background: rgb(67, 217, 173);
+  border-radius: 50%;
+  position: relative;
+  animation: pulse 0.8s infinite;
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(67, 217, 172, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(67, 217, 172, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(67, 217, 172, 0);
+  }
+}
+
+.play-board .food::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  background-color: rgba(67, 217, 172, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: sweep 2s infinite linear;
+}
+div.details {
+  flex: 1;
+}
+.snake-segment {
+  background-size: cover;
+}
+.overflow-status {
+  position: absolute;
+  bottom: 55px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  z-index: 1;
+}
+.overflow-status-game-over {
+  position: absolute;
+  bottom: 55px;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  flex-direction: column;
+}
+.overflow-status button {
+  background: #fea55f;
+  color: black;
+  font-size: 14px;
+  border: 0;
+  padding: 14px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 8px;
+}
+.overflow-status-game-over h3 {
+  width: 100%;
+  background: rgba(1, 22, 39, 0.84);
+  text-align: center;
+  font-size: 24px;
+  color: #43d9ad;
+  font-weight: 400;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-radius: 8px;
+  box-shadow: inset 1px 5px 11px 0 rgba(2, 18, 27, 0.71);
+}
+.overflow-status-game-over button {
+  width: max-content;
+  margin: 0 auto;
+  margin-top: 20px;
+  background: transparent;
+  border: 0;
+  color: #607b96;
+  font-size: 14px;
+  padding: 14px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+.overflow-status-game-over button:hover {
+  background: #fea55f;
+  color: black;
+}
+.top__left__cc {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  height: 13px;
+  width: 13px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 4px 0 #0d4341, inset 0 1px 2px 0 #1a8277;
+  background: radial-gradient(circle, #196c6a 15%, #114b4a 100%);
+}
+
+.top__right__cc {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  height: 13px;
+  width: 13px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 4px 0 #0d4341, inset 0 1px 2px 0 #1a8277;
+  background: radial-gradient(circle, #196c6a 15%, #114b4a 100%);
+}
+
+.bottom__left__cc {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  height: 13px;
+  width: 13px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 4px 0 #092d32, inset 0 1px 2px 0 #16645c;
+  background: radial-gradient(circle, #164c51 15%, #0d3a40 100%);
+}
+
+.bottom__right__cc {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  height: 13px;
+  width: 13px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 4px 0 #122c4e, inset 0 1px 2px 0 #2c588d;
+  background: radial-gradient(circle, #234b7c 15%, #122e4f 100%);
+}
