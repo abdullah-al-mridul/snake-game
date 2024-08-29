@@ -98,7 +98,9 @@ function App() {
       newSnake.unshift(head);
 
       if (head[0] === foodPosition[0] && head[1] === foodPosition[1]) {
-        EatSoundRef.current.play();
+        if (foodsEaten < 9) {
+          EatSoundRef.current.play();
+        }
         setFoodPosition([
           Math.floor(Math.random() * 25) + 1,
           Math.floor(Math.random() * 40) + 1,
@@ -107,7 +109,6 @@ function App() {
         if (foodsEaten >= 10) {
           setGameOver(true);
           setGameStarted(false);
-          SuccessRef.current, play();
           return;
         }
       } else {
@@ -167,6 +168,12 @@ function App() {
     setGameStarted(false);
   };
 
+  useEffect(() => {
+    if (foodsEaten >= 10) {
+      SuccessRef.current.play();
+    }
+  }, [foodsEaten]);
+
   const GameStartRef = useRef(null);
 
   const EatSoundRef = useRef(null);
@@ -202,34 +209,10 @@ function App() {
           Facebook
         </a>
       </p>
-      <audio
-        src={EatSound}
-        ref={EatSoundRef}
-        style={{
-          display: "none",
-        }}
-      ></audio>
-      <audio
-        src={Success}
-        ref={SuccessRef}
-        style={{
-          display: "none",
-        }}
-      ></audio>
-      <audio
-        src={Failed}
-        ref={FailedRef}
-        style={{
-          display: "none",
-        }}
-      ></audio>
-      <audio
-        src={GameStart}
-        ref={GameStartRef}
-        style={{
-          display: "none",
-        }}
-      ></audio>
+      <audio src={EatSound} ref={EatSoundRef}></audio>
+      <audio src={Success} ref={SuccessRef}></audio>
+      <audio src={Failed} ref={FailedRef}></audio>
+      <audio src={GameStart} ref={GameStartRef}></audio>
       <div className="wrapper">
         <div className="top__left__cc">
           <svg
