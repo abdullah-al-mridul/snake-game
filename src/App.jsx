@@ -186,7 +186,7 @@ function App() {
     console.log("position: Web Developer / Programmer");
     console.log("age: 16");
     console.groupEnd();
-  });
+  }, []);
   return (
     <div className="container">
       <p className="copyright-text">
