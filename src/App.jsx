@@ -1,10 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-
+import { AnimatePresence, motion } from "framer-motion";
+import GameStart from "./mp3/game-start.mp3";
+import EatSound from "./mp3/eat-sound.mp3";
 function App() {
   const initialSnakeLength = 10;
+  const [foodsEaten, setFoodsEaten] = useState(0);
   const centerX = Math.floor(25 / 2);
   const centerY = Math.floor(40 / 2);
+  const foods = Array.from({ length: 10 }, (_, idx) => {
+    return idx >= 10 - foodsEaten ? (
+      <motion.div
+        key={idx}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0 }}
+        className={"eated-food"}
+      ></motion.div>
+    ) : (
+      <div key={idx}></div>
+    );
+  });
+
   const getBorderRadius = (direction) => {
     switch (direction) {
       case "right":
@@ -19,28 +36,29 @@ function App() {
         return "50%";
     }
   };
+
   const getDirection = (snake) => {
     const head = snake[0];
     const prevHead = snake[1];
-
     if (prevHead[0] < head[0]) return "right";
     if (prevHead[0] > head[0]) return "left";
     if (prevHead[1] < head[1]) return "down";
     if (prevHead[1] > head[1]) return "up";
   };
+
   const [foodPosition, setFoodPosition] = useState([5, 5]);
+
   const [snake, setSnake] = useState(
     Array.from({ length: initialSnakeLength }, (_, index) => [
       centerX - index,
       centerY,
     ])
   );
+
   const [direction, setDirection] = useState([1, 0]);
-  const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(
-    () => parseInt(localStorage.getItem("high-score")) || 0
-  );
+
   const [gameOver, setGameOver] = useState(false);
+
   const [gameStarted, setGameStarted] = useState(false);
 
   const resetGame = () => {
@@ -55,17 +73,18 @@ function App() {
       Math.floor(Math.random() * 40) + 1,
     ]);
     setDirection([1, 0]);
-    setScore(0);
+    setFoodsEaten(0);
     setGameOver(false);
     setGameStarted(true);
   };
 
   const startGame = () => {
     resetGame();
+    GameStartRef.current.play();
   };
 
   useEffect(() => {
-    if (!gameStarted || gameOver) return;
+    if (!gameStarted || gameOver || foodsEaten >= 10) return;
 
     const moveSnake = () => {
       const newSnake = [...snake];
@@ -73,14 +92,21 @@ function App() {
         newSnake[0][0] + direction[0],
         newSnake[0][1] + direction[1],
       ];
+
       newSnake.unshift(head);
 
       if (head[0] === foodPosition[0] && head[1] === foodPosition[1]) {
-        setScore((prevScore) => prevScore + 1);
+        EatSoundRef.current.play();
         setFoodPosition([
           Math.floor(Math.random() * 25) + 1,
           Math.floor(Math.random() * 40) + 1,
         ]);
+        setFoodsEaten((prevFoodsEaten) => prevFoodsEaten + 1);
+        if (foodsEaten >= 10) {
+          setGameOver(true);
+          setGameStarted(false);
+          return;
+        }
       } else {
         newSnake.pop();
       }
@@ -98,16 +124,12 @@ function App() {
       } else {
         setSnake(newSnake);
       }
-
-      if (score > highScore) {
-        setHighScore(score);
-        localStorage.setItem("high-score", score);
-      }
     };
 
-    const gameInterval = setInterval(moveSnake, 80);
+    const gameInterval = setInterval(moveSnake, 100);
+
     return () => clearInterval(gameInterval);
-  }, [snake, direction, foodPosition, gameOver, score, highScore, gameStarted]);
+  }, [snake, direction, foodPosition, gameOver, gameStarted]);
 
   const handleKeyPress = (e) => {
     if (!gameStarted || gameOver) return;
@@ -137,12 +159,43 @@ function App() {
 
   const handleGameOver = () => {
     setGameOver(true);
-    setDirection([0, 0]); // Stop the snake from moving
-    setGameStarted(false); // Optionally, reset gameStarted to false to avoid issues
+    setDirection([0, 0]);
+    setGameStarted(false);
   };
+
+  const GameStartRef = useRef(null);
+
+  const EatSoundRef = useRef(null);
 
   return (
     <div className="container">
+      <p className="copyright-text">
+        Snake Game Developed by Abdullah |{" "}
+        <a href="https://github.com/abdullah-al-mridul" target="_blank">
+          Github
+        </a>{" "}
+        |{" "}
+        <a
+          href="https://www.facebook.com/abdullah.al.mridul.dev"
+          target="_blank"
+        >
+          Facebook
+        </a>
+      </p>
+      <audio
+        src={EatSound}
+        ref={EatSoundRef}
+        style={{
+          display: "none",
+        }}
+      ></audio>
+      <audio
+        src={GameStart}
+        ref={GameStartRef}
+        style={{
+          display: "none",
+        }}
+      ></audio>
       <div className="wrapper">
         <div className="top__left__cc">
           <svg
@@ -205,17 +258,33 @@ function App() {
           </svg>
         </div>
         <div className="play-board">
-          {!gameStarted && !gameOver && (
-            <div className="overflow-status">
-              <button onClick={startGame}>start-game</button>
-            </div>
-          )}
-          {gameOver && (
-            <div className="overflow-status-game-over">
-              <h3>GAME OVER!</h3>
-              <button onClick={startGame}>start-again</button>
-            </div>
-          )}
+          <AnimatePresence>
+            {!gameStarted && !gameOver && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.5 }}
+                className="overflow-status"
+              >
+                <button onClick={startGame}>start-game</button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {(gameOver || foodsEaten >= 10) && (
+              <motion.div
+                className="overflow-status-game-over"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h3>{foodsEaten >= 10 ? "WELL DONE!" : "GAME OVER!"}</h3>
+                <button onClick={startGame}>play-again</button>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <div
             className="food"
             style={{ gridArea: `${foodPosition[1]} / ${foodPosition[0]}` }}
@@ -239,7 +308,80 @@ function App() {
           })}
         </div>
         <div className="details">
-          Score: {score} | High Score: {highScore}
+          <div className="help-sec">
+            <p>{"// use keyboard"}</p>
+            <p>{"// arrows to play"}</p>
+            <div className="arrows-cont">
+              <div className="arrow-left">
+                <svg
+                  width={7}
+                  height={10}
+                  viewBox="0 0 7 10"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    id="0efe9440"
+                    d="M0.0390623 4.80914L6.03906 0.559128L6.03906 9.05916L0.0390623 4.80914Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+              <div className="arrow-center">
+                <div>
+                  <svg
+                    width={9}
+                    height={7}
+                    viewBox="0 0 9 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      id="7f89fa5d"
+                      d="M4.50002 0.309143L8.75003 6.30914H0.25L4.50002 0.309143Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <svg
+                    width={9}
+                    height={7}
+                    viewBox="0 0 9 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      id="69f978c8"
+                      d="M4.49998 6.80914L0.24997 0.809142L8.75 0.809143L4.49998 6.80914Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="arrow-right">
+                <svg
+                  width={7}
+                  height={10}
+                  viewBox="0 0 7 10"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    id="abfa0d0f"
+                    d="M6.96045 4.80914L0.960449 9.05916L0.960449 0.559128L6.96045 4.80914Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className=" food-list">
+            <p>{"// food left"}</p>
+            <div className="foods">
+              <AnimatePresence>{foods}</AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
     </div>

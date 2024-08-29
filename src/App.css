@@ -206,3 +206,115 @@ div.details {
   box-shadow: 2px 2px 4px 0 #122c4e, inset 0 1px 2px 0 #2c588d;
   background: radial-gradient(circle, #234b7c 15%, #122e4f 100%);
 }
+.help-sec {
+  background: rgba(1, 20, 35, 0.19);
+  width: 100%;
+  padding: 15px;
+
+  padding-left: 12px;
+  border-radius: 8px;
+  padding-right: 12px;
+  font-size: 14px;
+  color: #fea55f;
+}
+.arrows-cont {
+  display: flex;
+  width: 100%;
+  margin-top: 15px;
+  justify-content: space-between;
+  gap: 4.38px;
+  align-items: end;
+}
+.arrow-left {
+  flex: 1;
+  text-align: center;
+  background: #010c15;
+  border: 1px solid #1e2d3d;
+  box-sizing: border-box;
+  padding: 5px 0 5px 0;
+  border-radius: 8px;
+}
+.arrow-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4.81px;
+  justify-content: space-between;
+}
+.arrow-right {
+  flex: 1;
+  text-align: center;
+  background: #010c15;
+  border: 1px solid #1e2d3d;
+  box-sizing: border-box;
+  padding: 5px 0 5px 0;
+  border-radius: 8px;
+}
+.arrow-center div {
+  text-align: center;
+  background: #010c15;
+  border: 1px solid #1e2d3d;
+  box-sizing: border-box;
+  padding: 5px 0 5px 0;
+  border-radius: 8px;
+}
+.food-list {
+  padding-left: 13px;
+  margin: 20px 0 0 0;
+  color: #fea55f;
+}
+.foods {
+  display: grid;
+  margin: 10px 0 0 0;
+  row-gap: 15px;
+  place-items: center;
+  width: 120px;
+  grid-template-columns: repeat(5, 1fr);
+}
+.foods div {
+  background: rgb(67, 217, 173);
+  border-radius: 50%;
+  position: relative;
+  width: 8px;
+  height: 8px;
+  animation: food-pulse 0.8s infinite;
+}
+.foods div::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background-color: rgba(67, 217, 172, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+@keyframes food-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(67, 217, 172, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(67, 217, 172, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(67, 217, 172, 0);
+  }
+}
+.eated-food {
+  opacity: 0.5 !important;
+  animation: none !important;
+}
+.copyright-text {
+  color: white;
+  position: absolute;
+  bottom: 5px;
+  font-weight: 400;
+  font-size: 12px;
+  left: 5px;
+  color: #fea55f;
+}
+.copyright-text a {
+  color: #43d9ac;
+  text-decoration: none;
+}
