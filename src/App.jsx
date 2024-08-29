@@ -3,6 +3,8 @@ import "./App.css";
 import { AnimatePresence, motion } from "framer-motion";
 import GameStart from "./mp3/game-start.mp3";
 import EatSound from "./mp3/eat-sound.mp3";
+import Success from "./mp3/success.mp3";
+import Failed from "./mp3/failed.mp3";
 function App() {
   const initialSnakeLength = 10;
   const [foodsEaten, setFoodsEaten] = useState(0);
@@ -105,6 +107,7 @@ function App() {
         if (foodsEaten >= 10) {
           setGameOver(true);
           setGameStarted(false);
+          SuccessRef.current, play();
           return;
         }
       } else {
@@ -159,6 +162,7 @@ function App() {
 
   const handleGameOver = () => {
     setGameOver(true);
+    FailedRef.current.play();
     setDirection([0, 0]);
     setGameStarted(false);
   };
@@ -167,6 +171,22 @@ function App() {
 
   const EatSoundRef = useRef(null);
 
+  const FailedRef = useRef(null);
+
+  const SuccessRef = useRef(null);
+
+  useEffect(() => {
+    console.log(
+      "%c Abdullah Al Mridul ",
+      "color: #43D9AD; background-color: #011627; font-size:24px",
+      "Here is my details!"
+    );
+    console.group("User Details");
+    console.log("name: Abdullah Al Mridul");
+    console.log("position: Web Developer / Programmer");
+    console.log("age: 16");
+    console.groupEnd();
+  });
   return (
     <div className="container">
       <p className="copyright-text">
@@ -185,6 +205,20 @@ function App() {
       <audio
         src={EatSound}
         ref={EatSoundRef}
+        style={{
+          display: "none",
+        }}
+      ></audio>
+      <audio
+        src={Success}
+        ref={SuccessRef}
+        style={{
+          display: "none",
+        }}
+      ></audio>
+      <audio
+        src={Failed}
+        ref={FailedRef}
         style={{
           display: "none",
         }}
