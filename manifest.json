@@ -4,7 +4,7 @@
   "description": "A react based snake game made with full love by Abdullah",
   "icons": [
     {
-      "src": "./icon-512x512.png",
+      "src": "../icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
